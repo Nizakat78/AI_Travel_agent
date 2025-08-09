@@ -1,33 +1,184 @@
-# AI Travel Designer Agent
+# AI Travel Designer Agent — README
 
-## Project Description
-The AI Travel Designer Agent plans a full travel experience by coordinating between specialized agents. It suggests destinations, simulates travel bookings, and recommends local attractions and food based on user mood or interests.
+> **Project:** AI Travel Designer Agent  
+> **Purpose:** A multi-agent Chainlit app that plans travel experiences by coordinating Destination, Booking, and Explore agents with mock flight & hotel tools.  
+> **Pattern:** Follows the same multi-agent / tool / handoff architecture as the Career Mentor assignment.
 
-## How it Works
-This system leverages the OpenAI Agent SDK + Runner to orchestrate interactions between specialized agents and tools.
+---
 
-1.  **Destination Suggestion**: The `DestinationAgent` suggests travel destinations based on the user's mood or interests.
-2.  **Booking Simulation**: Once a destination is chosen, the `DestinationAgent` hands off to the `BookingAgent`. The `BookingAgent` then uses `get_flights()` and `suggest_hotels()` tools (with mock data) to simulate travel arrangements.
-3.  **Exploration Guide**: After booking simulation, the `BookingAgent` hands off to the `ExploreAgent`. The `ExploreAgent` suggests local attractions and food unique to the chosen destination.
+## Table of contents
+1. Project overview  
+2. Folder structure (expected)  
+3. Prerequisites  
+4. Environment variables (`.env`)  
+5. Install & run (local dev)  
+6. How it works (agents, tools, handoffs)  
+7. **Sample conversation** (ready to test)  
+8. Troubleshooting & common fixes  
+9. Submission checklist & demo tips
 
-## Agents Involved
-* **`DestinationAgent`**: Responsible for suggesting initial travel destinations.
-* **`BookingAgent`**: Focuses on simulating flight and hotel bookings.
-* **`ExploreAgent`**: Shares information about local attractions and food.
+---
 
-## Tools Utilized
-* **`Travel Info Generator`**: A tool (containing `get_flights()` and `suggest_hotels()`) used by the `BookingAgent` to retrieve mock flight and hotel information.
-* **`Hotel Picker`**: A tool (conceptual, could be merged or more complex) used by `BookingAgent` for hotel suggestions.
+# 1. Project overview
 
-## Handoff Logic
-Dynamic handoffs are managed between `DestinationAgent`, `BookingAgent`, and `ExploreAgent`. The `main.py` (runner) and agent classes orchestrate these transitions based on the user's progress and the information gathered.
+This repository demonstrates a small multi-agent system using the OpenAI Agent SDK + Runner pattern and Chainlit for chat UI.  
+Main features:
 
-## Setup and Installation
-(Instructions on how to set up your Python environment, install dependencies, and configure the OpenAI Agent SDK)
+- `Travel Agent` coordinates the flow and suggests destinations.  
+- `Destination Agent` recommends places and can call tools.  
+- `Booking Agent` simulates booking flow.  
+- `Explore Agent` suggests attractions, food, and local tips.  
+- Tools: `get_flights()` and `suggest_hotels()` — return **mock data** so you can demo without real provider accounts (but the code supports real API calls if you configure them).  
+- Hand-offs: Agents can hand off the session to one another; an on-handoff helper displays a short message and sets the next agent in Chainlit's user session.
 
+---
+
+# 2. Folder structure (expected)
+
+# AI Travel Designer Agent — README
+
+> **Project:** AI Travel Designer Agent  
+> **Purpose:** A multi-agent Chainlit app that plans travel experiences by coordinating Destination, Booking, and Explore agents with mock flight & hotel tools.  
+> **Pattern:** Follows the same multi-agent / tool / handoff architecture as the Career Mentor assignment.
+
+---
+
+## Table of contents
+1. Project overview  
+2. Folder structure (expected)  
+3. Prerequisites  
+4. Environment variables (`.env`)  
+5. Install & run (local dev)  
+6. How it works (agents, tools, handoffs)  
+7. **Sample conversation** (ready to test)  
+8. Troubleshooting & common fixes  
+9. Submission checklist & demo tips
+
+---
+
+# 1. Project overview
+
+This repository demonstrates a small multi-agent system using the OpenAI Agent SDK + Runner pattern and Chainlit for chat UI.  
+Main features:
+
+- `Travel Agent` coordinates the flow and suggests destinations.  
+- `Destination Agent` recommends places and can call tools.  
+- `Booking Agent` simulates booking flow.  
+- `Explore Agent` suggests attractions, food, and local tips.  
+- Tools: `get_flights()` and `suggest_hotels()` — return **mock data** so you can demo without real provider accounts (but the code supports real API calls if you configure them).  
+- Hand-offs: Agents can hand off the session to one another; an on-handoff helper displays a short message and sets the next agent in Chainlit's user session.
+
+---
+
+# 2. Folder structure (expected)
+
+
+
+AI_Travel_Agent/
+├─ Expert/
+│ ├─ travel_agent.py
+│ ├─ destination_agent.py
+│ ├─ booking_agent.py
+│ ├─ explore_agent.py
+├─ tools/
+│ ├─ get_flights.py
+│ ├─ suggest_hotels.py
+├─ util/
+│ ├─ make_on_handoff.py
+├─ main.py
+├─ set_config.py
+├─ .env
+├─ README.md <-- (this file)
+└─ requirements.txt
+
+
+
+---
+
+# 3. Prerequisites
+
+- Python **3.10+** (recommended).  
+- `pip` (for installing packages).  
+- Chainlit installed (we run the app via `chainlit run`).  
+- Access to an LLM provider if you want real model calls (the code uses a Gemini-style config by default). For demo, mock tools are already included.
+
+---
+
+# 4. Environment variables (`.env`)
+
+
+
+---
+
+# 5. Install & runss
 ```bash
-# Example:
-# git ai_travel_designer_agent
-# cd ai_travel_designer_agent
-# pip install -r requirements.txt
-# export OPENAI_API_KEY="your_openai_api_key"
+pip install -r requirements.txt
+chainlit run main.py
+
+
+
+```
+# 7. Sample conversation
+```
+You can copy-paste these messages into the Chainlit chat to see the agent in action.
+
+User:
+
+Hi! I want to plan a trip.
+
+
+
+
+Agent:
+
+Greets and asks for your mood, interests, location, and budget.
+
+User:
+
+rust
+Copy
+Edit
+I'm feeling adventurous, love mountains, budget around $800.
+Agent:
+
+Suggests at least 3 destinations (e.g., Denver, Asheville, Banff) with short descriptions.
+
+User:
+
+css
+Copy
+Edit
+I like Kathmandu, Nepal.
+Agent:
+
+Calls get_flights() and suggest_hotels() tools, shows mock flights & hotels for Kathmandu.
+
+User:
+
+css
+Copy
+Edit
+What can I explore there?
+Agent:
+
+Hands off to Explore Agent, shows top attractions, local food, cultural tips, and hidden gems.
+
+User:
+
+kotlin
+Copy
+Edit
+Can you book this trip for me?
+Agent:
+
+Hands off to Booking Agent, simulates booking, provides mock confirmation, and cost breakdown.
+
+User:
+
+css
+Copy
+Edit
+I want to go to Paris. Show me flights and hotels.
+Agent:
+
+Directly returns mock flight and hotel listings for Paris.
